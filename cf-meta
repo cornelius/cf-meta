@@ -1,0 +1,90 @@
+#!/usr/bin/ruby
+
+require "open-uri"
+require "yaml"
+gem "terminal-table"
+require "terminal-table"
+
+cf_deployment_version = "5.0.0"
+
+release_url = "https://github.com/cloudfoundry/cf-deployment/releases/tag/v#{cf_deployment_version}"
+yaml_url = "https://raw.githubusercontent.com/cloudfoundry/cf-deployment/v#{cf_deployment_version}/cf-deployment.yml"
+
+yaml = YAML::load(open(yaml_url) { |f| f.read} )
+
+releases = {}
+
+release_list = yaml["releases"]
+release_list.each do |release|
+  releases[release["name"]] = release
+end
+
+output_rows = []
+
+templates = YAML::load(File.read("templates.yml"))
+templates["packages"].each do |package|
+  package_name = package["name"]
+  if !releases.has_key?(package_name)
+    STDERR.puts "Package '#{package_name} from templates.yml is not in release."
+    next
+  end
+  release = releases[package_name]
+  output_row = []
+
+  output_row.push(release["name"])
+
+  output_row.push(release["version"])
+
+  download_url = release["url"]
+  output_row.push(download_url)
+
+  download_url =~ /https:\/\/bosh\.io\/d\/(.*)\?v=/
+  package_url = "https://#{$1}"
+  output_row.push(package_url)
+
+  output_row.push("Apache-2.0")
+
+  output_row.push(package["description"])
+
+  output_rows.push(output_row)
+end
+
+release_list.each do |release|
+  if !templates["packages"].map { |package| package["name"] }.include?(release["name"])
+    STDERR.puts "Release '#{release["name"]} is not listed in templates. Ignored for output."
+  end
+end
+
+output_headings = ["Name", "Version", "Download URL", "Package URL", "License", "Description"]
+
+table = Terminal::Table.new :headings => output_headings, :rows => output_rows
+
+puts table
+
+filename_base = "cf-deployment-#{cf_deployment_version}"
+
+File.open("#{filename_base}.html", "w") do |file|
+  file.puts "<h1>CF Deployment #{cf_deployment_version}</h1>"
+  file.puts "<a href='#{release_url}'>#{cf_deployment_version} release on GitHub</a>"
+  file.puts "<table>"
+  output_rows.each do |row|
+    file.puts "<tr>"
+    row.each do |cell|
+      file.print "<td>"
+      if cell =~ /http/
+        file.print "<a href='#{cell}'>#{cell}</a>"
+      else
+        file.print cell
+      end
+      file.puts "</td>"
+    end
+  end
+  file.puts "</table>"
+end
+
+File.open("#{filename_base}.csv", "w") do |file|
+  file.puts(output_headings.join(","))
+  output_rows.each do |row|
+    file.puts(row.join(","))
+  end
+end

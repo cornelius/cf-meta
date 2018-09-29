@@ -1,0 +1,59 @@
+packages:
+- name: bosh-dns-aliases
+  description: Cloud Foundry DNS aliases
+- name: capi
+  description: Cloud Foundry cloud controller
+- name: cf-cli
+  description: Cloud Foundry command line client
+- name: cf-mysql
+  description: Cloud Foundry MySQL release
+- name: cf-networking
+  description: Cloud Foundry container networking
+- name: cf-smoke-tests
+  description: Cloud Foundry smoke tests
+- name: cf-syslog-drain
+  description: Cloud Foundry syslog drain
+- name: cflinuxfs2
+  description: Cloud Foundry container root file system
+- name: credhub
+  description: Cloud Foundry credential management
+- name: bpm
+  description: Cloud Foundry isolated BOSH jobs
+- name: diego
+  description: Cloud Foundry application runtime
+- name: garden-runc
+  description: Cloud Foundry OCI container manager
+- name: log-cache
+  description: Cloud Foundry logging cache
+- name: loggregator
+  description: Cloud Foundry logging
+- name: loggregator-agent
+  description: Cloud Foundry logging agent
+- name: nats
+  description: Cloud Foundry NATS release
+- name: routing
+  description: Cloud Foundry HTTP and TCP routing
+- name: silk
+  description: Cloud Foundry network fabric
+- name: statsd-injector
+  description: Cloud Foundry companion component to Metron that receives Statsd and emits to Metron
+- name: uaa
+  description: CloudFoundry user account and authentication server
+- name: binary-buildpack
+  description: Cloud Foundry binary buildpack
+- name: dotnet-core-buildpack
+  description: Cloud Foundry .Net Core buildpack
+- name: nodejs-buildpack
+  description: Cloud Foundry NodeJS buildpack
+- name: php-buildpack
+  description: Cloud Foundry PHP buildpack
+- name: python-buildpack
+  description: Cloud Foundry Python buildpack
+- name: ruby-buildpack
+  description: Cloud Foundry Ruby buildpack
+- name: staticfile-buildpack
+  description: Cloud Foundry static file buildpack
+- name: go-buildpack
+  description: Cloud Foundry Go buildpack
+- name: java-buildpack
+  description: Cloud Foundry Java buildpack
